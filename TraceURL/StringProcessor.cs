@@ -6,21 +6,20 @@
     {
         public int AllTimeouts { get; set; }
         private readonly string to = "Request timed out.";
-        private readonly object alltoLock = new object();
+        private readonly object alltoLock = new ();
 
         public int IsTimedOut(string input)
         {
-            if (input.Contains(to))
+            if (input is null) throw new System.ArgumentNullException(nameof(input), "input was NULL");
+
+            int tos = input.Split('\n')
+                .Where(x => x.Contains(to, System.StringComparison.InvariantCultureIgnoreCase))
+                .Count();
+            lock (alltoLock)
             {
-                string[] lines = input.Split('\n');
-                int tos = lines.Where(x => x.Contains(to)).Count();
-                lock (alltoLock)
-                {
-                    AllTimeouts += tos;
-                }
-                return tos;
+                AllTimeouts += tos;
             }
-            return 0;
+            return tos;
         }
     }
 }

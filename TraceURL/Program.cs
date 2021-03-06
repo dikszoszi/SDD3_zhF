@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+[assembly: CLSCompliant(false)]
 namespace TraceURL
 {
     internal class Program
     {
-        static CancellationTokenSource cts = new CancellationTokenSource();
-        static void Main(string[] args)
+        // private static readonly CancellationTokenSource cts = new ();
+
+        private static void Main()
         {
             string[] urls = new string[] {
                 "google.com",
@@ -21,7 +23,7 @@ namespace TraceURL
 
             for (int i = 0; i < urls.Length; i++)
             {
-                processes[i] = new Process();
+                processes[i] = new ();
                 processes[i].StartInfo = new ProcessStartInfo("tracert", urls[i])
                 {
                     CreateNoWindow = true,
@@ -46,7 +48,7 @@ namespace TraceURL
 
             Task<int>[] tasks = new Task<int>[results.Length];
 
-            StringProcessor sp = new StringProcessor();
+            StringProcessor sp = new ();
 
             for (int i = 0; i < tasks.Length; i++)
             {
